@@ -6,10 +6,13 @@ const c = new Crawler({
         if (err) {
             console.log(err)
         } else {
-            var $ = res.$
-            console.log($("title").text())
+            let $ = res.$
+            let heads = $(".post-head h1")
+            for (let i = 0; i < heads.length; i++) {
+                console.log($(heads[i]).text())
+            }
         }
     }
 })
 
-c.queue("http://www.amazon.com")
+c.queue("http://www.themosvagas.com.br")
