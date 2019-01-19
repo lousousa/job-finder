@@ -1,4 +1,5 @@
-const Crawler = require("crawler");
+const Crawler = require("crawler")
+const cron = require("node-cron")
 
 const c = new Crawler({
     maxConnections: 10,
@@ -22,4 +23,7 @@ let pageList = []
 for (let i = pageNumberCount; i >= pageNumberStart; i--)
     pageList.push(`http://www.themosvagas.com.br/page/${i}/`)
 
-c.queue(pageList)
+// running a task every 5 sec
+cron.schedule("*/5 * * * * *", () => {
+    c.queue(pageList)
+})
