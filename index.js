@@ -8,22 +8,31 @@ const c = new Crawler({
             console.log(err)
         } else {
             let $ = res.$
-           $(".post-head h1").each((i, el) => {
-                const content = $(el).text()
-                if (content.match(/auxiliar/i))
-                    console.log(content)
+           $(".post").each((i, el) => {
+                
+                const postIdStr = $(el).find(".post-like").attr("id")
+                const postId = parseInt(postIdStr.split("-")[2])
+
+                const postHead = $(el).find(".post-head")
+                const headerText = $(postHead).find("h1").text()
+                const postLink = $(postHead).find("h1 > a").attr("href")
+                const postDate = $(postHead).find(".post-meta > div:first-of-type").text()
+
+                 console.log(`${ headerText } - ${ postDate }`)
+
            })
         }
     }
 })
 
 const pageNumberStart = 1
-const pageNumberCount = 10
+const pageNumberCount = 1
+const words = ["farma", "maqui"]
 let pageList = []
 
-for (let i = pageNumberCount; i >= pageNumberStart; i--)
-    pageList.push(`http://www.themosvagas.com.br/page/${i}/`)
-
+for (let i = 0; i < words.length; i++)
+    for (let j = pageNumberCount; j >= pageNumberStart; j--)
+        pageList.push(`http://www.themosvagas.com.br/page/${ j }/?s=${ words[i] }`)
 
 c.queue(pageList)
 // running a task every 5 sec
