@@ -15,4 +15,11 @@ const c = new Crawler({
     }
 })
 
-c.queue("http://www.themosvagas.com.br")
+const pageNumberStart = 1
+const pageNumberCount = 3
+let pageList = []
+
+for (let i = pageNumberCount; i >= pageNumberStart; i--)
+    pageList.push(`http://www.themosvagas.com.br/page/${i}/`)
+
+c.queue(pageList)
