@@ -8,22 +8,23 @@ const c = new Crawler({
             console.log(err)
         } else {
             let $ = res.$
-            let heads = $(".post-head h1")
-            for (let i = 0; i < heads.length; i++) {
-                console.log($(heads[i]).text())
-            }
+           $(".post-head h1").each((i, el) => {
+                const content = $(el).text()
+                if (content.match(/auxiliar/i))
+                    console.log(content)
+           })
         }
     }
 })
 
 const pageNumberStart = 1
-const pageNumberCount = 3
+const pageNumberCount = 10
 let pageList = []
 
 for (let i = pageNumberCount; i >= pageNumberStart; i--)
     pageList.push(`http://www.themosvagas.com.br/page/${i}/`)
 
+
+c.queue(pageList)
 // running a task every 5 sec
-cron.schedule("*/5 * * * * *", () => {
-    c.queue(pageList)
-})
+// cron.schedule("*/5 * * * * *", () => { c.queue(pageList) })
