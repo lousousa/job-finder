@@ -9,7 +9,7 @@ const configs = require("./configs.json")
 const { BitlyClient } = require("bitly")
 
 let posts = []
-const ENABLE_SENDING = false
+const ENABLE_SENDING = true
 
 const c = new Crawler({
     maxConnections: 10,
@@ -157,4 +157,4 @@ async function initBitly(url) {
 }
 
 // Running a task every 2 hour
-cron.schedule("* * */2 * * *", () => { c.queue(pageList) })
+cron.schedule("* */2 * * *", () => { c.queue(pageList) })
