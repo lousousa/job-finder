@@ -3,6 +3,7 @@ const cron = require("node-cron")
 const mysql = require("mysql")
 const url = require("url")
 const querystring = require("querystring")
+const moment = require("moment")
 
 let posts = []
 
@@ -79,7 +80,7 @@ for (let i = 0; i < words.length; i++)
 c.queue(pageList)
 c.on("drain", () => {
 
-    console.log("Creating connection... ")
+    console.log(`Creating connection... ${ moment().format("DD/MM/YYYY - HH:mm:ss") }`)
 
     const conn = mysql.createConnection(require("./database.json"))
     conn.connect()
