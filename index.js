@@ -9,6 +9,7 @@ const configs = require("./configs.json")
 const { BitlyClient } = require("bitly")
 
 let posts = []
+const ENABLE_SENDING = false
 
 const c = new Crawler({
     maxConnections: 10,
@@ -108,9 +109,7 @@ c.on("drain", () => {
                 conn.query("INSERT INTO themosvagas SET ?", post, (err, results, fields) => {
                     if (err) throw err
                     postsInsertedCount++
-
-                    // Send SMS
-
+                    if (ENABLE_SENDING) initBitly(post.post_url)
                     if(i == posts.length - 1) done()
                 })
 
@@ -144,19 +143,18 @@ const sendSMS = (message) => {
 }
 
 const bitly = new BitlyClient(configs.bitly.accessToken, {})
-async function initBitly() {
+async function initBitly(url) {
 
     let result
     try {
-        result = await bitly.shorten("https://github.com/lousousa")
-        console.log(result.url)
-    } catch(e) {
-        throw e
+        result = await bitly.shorten(url)
+        sendSMS(`Tem um novo post no Themos Vagas que pode te interessar: ${ result.url }`)
+    } catch(err) {
+        throw err
     }
     return result
 
 }
-initBitly()
 
-// Running a task every 5 sec
-cron.schedule("*/5 * * * * *", () => { c.queue(pageList) })
+// Running a task every 2 hour
+cron.schedule("* * */2 * * *", () => { c.queue(pageList) })
