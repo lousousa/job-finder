@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.391.0",
+    "bitly": "^6.0.8",
     "crawler": "^1.2.0",
     "moment": "^2.23.0",
     "mysql": "^2.16.0",

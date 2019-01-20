@@ -6,6 +6,7 @@ const querystring = require("querystring")
 const moment = require("moment")
 const AWS = require("aws-sdk")
 const configs = require("./configs.json")
+const { BitlyClient } = require("bitly")
 
 let posts = []
 
@@ -142,5 +143,20 @@ const sendSMS = (message) => {
 
 }
 
-// running a task every 5 sec
+const bitly = new BitlyClient(configs.bitly.accessToken, {})
+async function initBitly() {
+
+    let result
+    try {
+        result = await bitly.shorten("https://github.com/lousousa")
+        console.log(result.url)
+    } catch(e) {
+        throw e
+    }
+    return result
+
+}
+initBitly()
+
+// Running a task every 5 sec
 cron.schedule("*/5 * * * * *", () => { c.queue(pageList) })

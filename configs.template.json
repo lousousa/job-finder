@@ -12,5 +12,8 @@
     "smsParams": {
         "phoneNumber": "PHONE_NUMBER",
         "region": "REGION"
+    },
+    "bitly": {
+        "accessToken": "ACCESS_TOKEN"
     }
 }
