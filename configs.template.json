@@ -1,0 +1,16 @@
+{
+    "database": {
+        "host": "localhost",
+        "user": "user",
+        "password": "password",
+        "database": "database"
+    },
+    "aws": {
+        "accessKeyId": "ACCESS_KEY_ID",
+        "secretAccessKey": "SECRET_ACCESS_KEY"
+    },
+    "smsParams": {
+        "phoneNumber": "PHONE_NUMBER",
+        "region": "REGION"
+    }
+}
