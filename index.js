@@ -9,7 +9,7 @@ const configs = require("./configs.json")
 const { BitlyClient } = require("bitly")
 
 let posts = []
-const ENABLE_SENDING = false
+const ENABLE_SENDING = true
 
 const c = new Crawler({
     maxConnections: 10,
@@ -96,6 +96,7 @@ c.on("drain", () => {
 
     const done = () => {
         conn.end()
+	console.log(`Ending connection... ${ moment().format("DD/MM/YYYY - HH:mm:ss") }`)
     }
 
     for (let i = 0; i < posts.length; i++) {
