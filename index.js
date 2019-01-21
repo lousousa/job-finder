@@ -155,5 +155,5 @@ async function initBitly(url, post_id) {
 
 }
 
-// Running a task every 2 hour
-cron.schedule("* */2 * * *", () => { c.queue(pageList) })
+// Running a task every 1 hour
+cron.schedule("0 0 */1 * * *", () => { c.queue(pageList) })
