@@ -9,7 +9,7 @@ const configs = require("./configs.json")
 const { BitlyClient } = require("bitly")
 
 let posts = []
-const ENABLE_SENDING = true
+const ENABLE_SENDING = false
 
 const c = new Crawler({
     maxConnections: 10,
@@ -74,7 +74,7 @@ const postDateTextToYYYYMMDD = (dateText) => {
 
 const pageNumberStart = 1
 const pageNumberCount = 1
-const words = [] // ["farma", "maqui", "conta"]
+const words = ["farma", "maqui", "direito"]
 let pageList = []
 
 if (words.length) {
