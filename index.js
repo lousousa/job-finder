@@ -95,11 +95,9 @@ c.on("drain", () => {
     conn.connect()
 
     const done = () => {
-        console.log(`New posts found: ${ postsInsertedCount }`)
-        conn.destroy()
+        conn.end()
     }
 
-    let postsInsertedCount = 0
     for (let i = 0; i < posts.length; i++) {
         let post = { post_id: posts[i].post_id, post_url: posts[i].post_url, post_date: posts[i].post_date }
         conn.query(`SELECT * FROM themosvagas WHERE post_id = ${ post.post_id }`, (err, results, fields) => {
@@ -108,8 +106,7 @@ c.on("drain", () => {
 
                 conn.query("INSERT INTO themosvagas SET ?", post, (err, results, fields) => {
                     if (err) throw err
-                    postsInsertedCount++
-                    if (ENABLE_SENDING) initBitly(post.post_url)
+                    if (ENABLE_SENDING) initBitly(post.post_url, post.post_id)
                     if(i == posts.length - 1) done()
                 })
 
@@ -125,7 +122,7 @@ AWS.config.update({
     secretAccessKey: configs.aws.secretAccessKey,
 })
 
-const sendSMS = (message) => {
+const sendSMS = (post_id, post_url, message) => {
     
     const sns = new AWS.SNS();
     const params = {
@@ -137,18 +134,20 @@ const sendSMS = (message) => {
     
     sns.publish(params, (err, data) => {
         if (err) console.log(err, err.stack)
-        else console.log(data)
+        else {
+            console.log(`Sending post ${ post_id } - ${ post_url }\nat ${ moment().format("DD/MM/YYYY - HH:mm:ss") }`)
+        }
     });
 
 }
 
 const bitly = new BitlyClient(configs.bitly.accessToken, {})
-async function initBitly(url) {
+async function initBitly(url, post_id) {
 
     let result
     try {
         result = await bitly.shorten(url)
-        sendSMS(`Tem um novo post no Themos Vagas que pode te interessar: ${ result.url }`)
+        sendSMS(post_id, url, `Tem um novo post no Themos Vagas que pode te interessar: ${ result.url }`)
     } catch(err) {
         throw err
     }
