@@ -36,7 +36,7 @@ const c = new Crawler({
                     post_id: postId,
                     post_url: postUrl,
                     post_date: postDate,
-                    search: uriQuery.s,
+                    searchTerm: uriQuery.s,
                     header_text: headerText
                 })
             })
@@ -74,13 +74,13 @@ const postDateTextToYYYYMMDD = (dateText) => {
 
 const pageNumberStart = 1
 const pageNumberCount = 1
-const words = ["farma", "maqui", "direito"]
+const searchTerms = configs.searchTerms
 let pageList = []
 
-if (words.length) {
-    for (let i = 0; i < words.length; i++)
+if (searchTerms.length) {
+    for (let i = 0; i < searchTerms.length; i++)
         for (let j = pageNumberCount; j >= pageNumberStart; j--)
-            pageList.push(`http://www.themosvagas.com.br/page/${ j }/?s=${ words[i] }`)
+            pageList.push(`http://www.themosvagas.com.br/page/${ j }/?s=${ searchTerms[i] }`)
 } else {
     for (let i = pageNumberCount; i >= pageNumberStart; i--)
         pageList.push(`http://www.themosvagas.com.br/page/${ i }`)
@@ -96,7 +96,7 @@ c.on("drain", () => {
 
     const done = () => {
         conn.end()
-	console.log(`Ending connection... ${ moment().format("DD/MM/YYYY - HH:mm:ss") }`)
+	    console.log(`Ending connection... ${ moment().format("DD/MM/YYYY - HH:mm:ss") }`)
     }
 
     for (let i = 0; i < posts.length; i++) {
@@ -107,7 +107,7 @@ c.on("drain", () => {
 
                 conn.query("INSERT INTO themosvagas SET ?", post, (err, results, fields) => {
                     if (err) throw err
-                    if (ENABLE_SENDING) initBitly(post.post_url, post.post_id)
+                    if (ENABLE_SENDING) initBitly(post.post_url, post.post_id, posts[i].searchTerm)
                     if(i == posts.length - 1) done()
                 })
 
@@ -125,7 +125,7 @@ AWS.config.update({
 
 const sendSMS = (post_id, post_url, message) => {
     
-    const sns = new AWS.SNS();
+    const sns = new AWS.SNS()
     const params = {
         Message: message,
         MessageStructure: "string",
@@ -143,12 +143,13 @@ const sendSMS = (post_id, post_url, message) => {
 }
 
 const bitly = new BitlyClient(configs.bitly.accessToken, {})
-async function initBitly(url, post_id) {
+async function initBitly(url, post_id, searchTerm) {
 
     let result
     try {
         result = await bitly.shorten(url)
-        sendSMS(post_id, url, `Tem um novo post no Themos Vagas que pode te interessar: ${ result.url }`)
+        let alt = searchTerm ? ` com o termo \"${ searchTerm }\"` : ""
+        sendSMS(post_id, url, `Tem um novo post${ alt } no Themos Vagas que pode te interessar: ${ result.url }`)
     } catch(err) {
         throw err
     }

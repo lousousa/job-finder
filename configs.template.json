@@ -15,5 +15,6 @@
     },
     "bitly": {
         "accessToken": "ACCESS_TOKEN"
-    }
+    },
+    "searchTerms": []
 }
