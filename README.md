@@ -2,7 +2,7 @@
 
 ## Description
 
-It's a simple crawler system that checks a pre-defined "job offers" web page, then sends an SMS for my phone number when finding some updated posts including the terms I was looking for. I decided to capture the Themos Vagas blog info for this project, once I live in Teresina City (Piaui, Brazil).
+It's a crawler system that checks a pre-defined "job offers" web page, then sends an SMS for my phone number when finding some updated posts including the terms I was looking for. I decided to capture the Themos Vagas blog info for this project, once I live in Teresina City (Piaui, Brazil).
 
 The behavior of the system is also simple, and described on the following flow:
 1) There is a crawler which reads the list of posts on the desired page, filtered by a specific search;
